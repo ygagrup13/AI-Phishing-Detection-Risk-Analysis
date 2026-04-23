@@ -1,0 +1,19 @@
+# Web Crawler Modülü 
+requests
+beautifulsoup4
+
+# Analiz ve Makine Öğrenmesi 
+pandas
+numpy
+scikit-learn
+
+# URL Özellik Çıkarımı
+tldextract
+re
+urllib.parse
+
+# API ve Web Servis
+fastapi
+uvicorn
+pydantic
+aiofiles

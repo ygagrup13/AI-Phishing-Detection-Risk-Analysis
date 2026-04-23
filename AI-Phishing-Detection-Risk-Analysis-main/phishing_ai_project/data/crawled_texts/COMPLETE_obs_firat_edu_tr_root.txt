@@ -1,0 +1,150 @@
+SOURCE URL: https://obs.firat.edu.tr/
+--------------------------------------------------
+
+
+============================================================
+URL: https://obs.firat.edu.tr/
+============================================================
+
+Fırat Üniversitesi Öğrenci Bilgi Sistemi English Önlisans / Lisans / Enstitü Öğrenci Girişi Akademisyen Girişi İdari Personel Girişi Mezun Öğrenci Girişi
+Fırat Üniversitesi Öğrenci Bilgi Sistemi
+Fırat Üniversitesi
+Öğrenci Bilgi Sistemi
+English Önlisans / Lisans / Enstitü Öğrenci Girişi Akademisyen Girişi İdari Personel Girişi Mezun Öğrenci Girişi
+English
+English -> [LINK: javascript:__doPostBack('btnChangeLanguage','')]
+Önlisans / Lisans / Enstitü Öğrenci Girişi Akademisyen Girişi İdari Personel Girişi Mezun Öğrenci Girişi
+Önlisans / Lisans / Enstitü
+Önlisans / Lisans / Enstitü
+Önlisans / Lisans / Enstitü
+Önlisans / Lisans / Enstitü -> [LINK: https://obs.firat.edu.tr/]
+Akademisyen Girişi -> [LINK: https://obs.firat.edu.tr/oibs/acd/login.aspx]
+İdari Personel Girişi -> [LINK: https://obs.firat.edu.tr/oibs/login.aspx]
+Mezun Öğrenci Girişi -> [LINK: https://obs.firat.edu.tr/oibs/kariyer/login.aspx]
+
+============================================================
+URL: https://obs.firat.edu.tr/oibs/acd/login.aspx
+============================================================
+
+Merkezi Kimlik Doğrulama Servisi Kullanıcı Adı ve Parolanızı giriniz English | Türkçe Şifre Değiştir | Şifremi Unuttum
+Merkezi Kimlik Doğrulama Servisi Kullanıcı Adı ve Parolanızı giriniz English | Türkçe Şifre Değiştir | Şifremi Unuttum
+Merkezi Kimlik Doğrulama Servisi Kullanıcı Adı ve Parolanızı giriniz English | Türkçe Şifre Değiştir | Şifremi Unuttum
+Merkezi Kimlik Doğrulama Servisi Kullanıcı Adı ve Parolanızı giriniz English | Türkçe Şifre Değiştir | Şifremi Unuttum
+Merkezi Kimlik Doğrulama Servisi
+Merkezi Kimlik Doğrulama Servisi -> [LINK: https://obs.firat.edu.tr/oibs/acd/login]
+Kullanıcı Adı ve Parolanızı giriniz English | Türkçe Şifre Değiştir | Şifremi Unuttum
+Kullanıcı Adı ve Parolanızı giriniz English | Türkçe Şifre Değiştir | Şifremi Unuttum
+Kullanıcı Adı ve Parolanızı giriniz
+English | Türkçe
+English -> [LINK: https://obs.firat.edu.tr/oibs/acd/login?service=https://obs.firat.edu.tr/oibs/acd&locale=en]
+Türkçe -> [LINK: https://obs.firat.edu.tr/oibs/acd/login?service=https://obs.firat.edu.tr/oibs/acd&locale=tr]
+Şifre Değiştir -> [LINK: https://obs.firat.edu.tr/oibs/acd/login.aspx]
+Şifremi Unuttum -> [LINK: https://obs.firat.edu.tr/oibs/acd/login.aspx]
+
+============================================================
+URL: https://obs.firat.edu.tr/oibs/login.aspx
+============================================================
+
+Giriş Seçenekleri T.C. Kimlik Numaranızı ve e-Devlet Şifrenizi kullanarak kimliğiniz doğrulandıktan sonra işleminize kaldığınız yerden devam edebilirsiniz. e-Devlet Şifresi Nedir, Nasıl Alınır? e-Devlet Şifresi İle Giriş T.C. Kimlik No e-Devlet Şifresi Dikkat: Üst Karakter (
+⇪Caps Lock) tuşunuz açık. * e-Devlet şifrenizi unutmanız durumunda doğruladığınız cep telefonunuzdan yenileme işlemi yapabilirsiniz. Güvenlik Kodu Lütfen resimde gördüğünüz karakterleri yanında bulunan kutuya giriniz. Resmi okuyamıyorsanız, üzerine tıklayarak yeni bir tane oluşturabilirsiniz. Şifremi Unuttum İşleminiz devam ediyor. Lütfen bekleyiniz... İptal Giriş Yap
+Giriş Seçenekleri T.C. Kimlik Numaranızı ve e-Devlet Şifrenizi kullanarak kimliğiniz doğrulandıktan sonra işleminize kaldığınız yerden devam edebilirsiniz. e-Devlet Şifresi Nedir, Nasıl Alınır? e-Devlet Şifresi İle Giriş T.C. Kimlik No e-Devlet Şifresi Dikkat: Üst Karakter (
+⇪Caps Lock) tuşunuz açık. * e-Devlet şifrenizi unutmanız durumunda doğruladığınız cep telefonunuzdan yenileme işlemi yapabilirsiniz. Güvenlik Kodu Lütfen resimde gördüğünüz karakterleri yanında bulunan kutuya giriniz. Resmi okuyamıyorsanız, üzerine tıklayarak yeni bir tane oluşturabilirsiniz. Şifremi Unuttum İşleminiz devam ediyor. Lütfen bekleyiniz... İptal Giriş Yap
+Giriş Seçenekleri
+T.C. Kimlik Numaranızı ve e-Devlet Şifrenizi kullanarak kimliğiniz doğrulandıktan sonra işleminize kaldığınız yerden devam edebilirsiniz. e-Devlet Şifresi Nedir, Nasıl Alınır? e-Devlet Şifresi İle Giriş T.C. Kimlik No e-Devlet Şifresi Dikkat: Üst Karakter (
+⇪Caps Lock) tuşunuz açık. * e-Devlet şifrenizi unutmanız durumunda doğruladığınız cep telefonunuzdan yenileme işlemi yapabilirsiniz. Güvenlik Kodu Lütfen resimde gördüğünüz karakterleri yanında bulunan kutuya giriniz. Resmi okuyamıyorsanız, üzerine tıklayarak yeni bir tane oluşturabilirsiniz. Şifremi Unuttum İşleminiz devam ediyor. Lütfen bekleyiniz... İptal Giriş Yap
+T.C. Kimlik Numaranızı ve e-Devlet Şifrenizi kullanarak kimliğiniz doğrulandıktan sonra işleminize kaldığınız yerden devam edebilirsiniz. e-Devlet Şifresi Nedir, Nasıl Alınır?
+e-Devlet Şifresi Nedir, Nasıl Alınır? -> [LINK: javascript:void(0)]
+T.C. Kimlik No
+e-Devlet Şifresi Dikkat: Üst Karakter (
+⇪Caps Lock) tuşunuz açık. * e-Devlet şifrenizi unutmanız durumunda doğruladığınız cep telefonunuzdan yenileme işlemi yapabilirsiniz.
+Dikkat: Üst Karakter (
+⇪Caps Lock) tuşunuz açık. * e-Devlet şifrenizi unutmanız durumunda doğruladığınız cep telefonunuzdan yenileme işlemi yapabilirsiniz.
+şifrenizi unutmanız durumunda -> [LINK: javascript:void(0)]
+Güvenlik Kodu Lütfen resimde gördüğünüz karakterleri yanında bulunan kutuya giriniz. Resmi okuyamıyorsanız, üzerine tıklayarak yeni bir tane oluşturabilirsiniz.
+Lütfen resimde gördüğünüz karakterleri yanında bulunan kutuya giriniz. Resmi okuyamıyorsanız, üzerine tıklayarak yeni bir tane oluşturabilirsiniz.
+Şifremi Unuttum
+Şifremi Unuttum -> [LINK: https://obs.firat.edu.tr/Giris/SifremiUnuttum]
+İşleminiz devam ediyor. Lütfen bekleyiniz...
+İptal Giriş Yap
+
+============================================================
+URL: https://obs.firat.edu.tr/oibs/std/login.aspx
+============================================================
+
+Merkezi Kimlik Doğrulama Servisi Kullanıcı Adı ve Parolanızı giriniz English | Türkçe Şifre Değiştir | Şifremi Unuttum
+Merkezi Kimlik Doğrulama Servisi Kullanıcı Adı ve Parolanızı giriniz English | Türkçe Şifre Değiştir | Şifremi Unuttum
+Merkezi Kimlik Doğrulama Servisi Kullanıcı Adı ve Parolanızı giriniz English | Türkçe Şifre Değiştir | Şifremi Unuttum
+Merkezi Kimlik Doğrulama Servisi Kullanıcı Adı ve Parolanızı giriniz English | Türkçe Şifre Değiştir | Şifremi Unuttum
+Merkezi Kimlik Doğrulama Servisi
+Merkezi Kimlik Doğrulama Servisi -> [LINK: https://obs.firat.edu.tr/oibs/std/login]
+Kullanıcı Adı ve Parolanızı giriniz English | Türkçe Şifre Değiştir | Şifremi Unuttum
+Kullanıcı Adı ve Parolanızı giriniz English | Türkçe Şifre Değiştir | Şifremi Unuttum
+Kullanıcı Adı ve Parolanızı giriniz
+English | Türkçe
+English -> [LINK: https://obs.firat.edu.tr/oibs/std/login?service=https://obs.firat.edu.tr/oibs/std&locale=en]
+Türkçe -> [LINK: https://obs.firat.edu.tr/oibs/std/login?service=https://obs.firat.edu.tr/oibs/std&locale=tr]
+Şifre Değiştir -> [LINK: https://obs.firat.edu.tr/oibs/std/login.aspx]
+Şifremi Unuttum -> [LINK: https://obs.firat.edu.tr/oibs/std/login.aspx]
+
+============================================================
+URL: https://obs.firat.edu.tr/oibs/kariyer/login.aspx
+============================================================
+
+Fırat Üniversitesi Mezun Bilgi Sistemi English Mezunlar Portalına Giriş Önlisans Mezunu 49.199 Lisans Mezunu 123.875 Lisansüstü Mezunu 19.580 Duyurular Değerli Mezunlarımız 13.05.2023 E Devlet Verilerinin Güncellenmesi Hakkında 13.05.2023 Haberler Genel Duyuru Yok Etkinlikler Genel Duyuru Yok Sayfa Duyuruları Duyurular için tıklayınız Mezunlar + − © Fırat Üniversitesi Mezunlar Portalı Girişi × Güvenlik Kodunu Seslendirmek İçin Enter tuşuna basınız T.C.Kimlik No Şifre (⇪Caps Lock) Sayıların Toplamı Giriş Şifremi Unuttum Oturum Açmak İçin Kalan Süre E-Devlet İle Giriş Sayfayı Yenile
+Fırat Üniversitesi Mezun Bilgi Sistemi English Mezunlar Portalına Giriş Önlisans Mezunu 49.199 Lisans Mezunu 123.875 Lisansüstü Mezunu 19.580 Duyurular Değerli Mezunlarımız 13.05.2023 E Devlet Verilerinin Güncellenmesi Hakkında 13.05.2023 Haberler Genel Duyuru Yok Etkinlikler Genel Duyuru Yok Sayfa Duyuruları Duyurular için tıklayınız Mezunlar + − © Fırat Üniversitesi Mezunlar Portalı Girişi × Güvenlik Kodunu Seslendirmek İçin Enter tuşuna basınız T.C.Kimlik No Şifre (⇪Caps Lock) Sayıların Toplamı Giriş Şifremi Unuttum Oturum Açmak İçin Kalan Süre E-Devlet İle Giriş Sayfayı Yenile
+Fırat Üniversitesi Mezun Bilgi Sistemi English
+Fırat Üniversitesi Mezun Bilgi Sistemi English
+Fırat Üniversitesi Mezun Bilgi Sistemi English
+Fırat Üniversitesi Mezun Bilgi Sistemi
+Fırat Üniversitesi Mezun Bilgi Sistemi
+Fırat Üniversitesi Mezun Bilgi Sistemi
+Fırat Üniversitesi
+English
+English
+English -> [LINK: javascript:__doPostBack('btnChangeLanguage','')]
+Mezunlar Portalına Giriş Önlisans Mezunu 49.199 Lisans Mezunu 123.875 Lisansüstü Mezunu 19.580
+Mezunlar Portalına Giriş
+Mezunlar Portalına Giriş
+Giriş -> [LINK: javascript:__doPostBack('btnLoginWindow','')]
+Önlisans Mezunu 49.199
+Önlisans Mezunu 49.199
+49.199
+Lisans Mezunu 123.875
+Lisans Mezunu 123.875
+123.875
+Lisansüstü Mezunu 19.580
+Lisansüstü Mezunu 19.580
+19.580
+Duyurular Değerli Mezunlarımız 13.05.2023 E Devlet Verilerinin Güncellenmesi Hakkında 13.05.2023 Haberler Genel Duyuru Yok Etkinlikler Genel Duyuru Yok
+Duyurular Değerli Mezunlarımız 13.05.2023 E Devlet Verilerinin Güncellenmesi Hakkında 13.05.2023
+Duyurular Değerli Mezunlarımız 13.05.2023 E Devlet Verilerinin Güncellenmesi Hakkında 13.05.2023
+Değerli Mezunlarımız 13.05.2023 E Devlet Verilerinin Güncellenmesi Hakkında 13.05.2023
+Değerli Mezunlarımız -> [LINK: javascript:__doPostBack('grdDuyurular$ctl02$btnDuyuruGoster','')]
+E Devlet Verilerinin Güncellenmesi Hakkında -> [LINK: javascript:__doPostBack('grdDuyurular$ctl03$btnDuyuruGoster','')]
+Haberler Genel Duyuru Yok
+Haberler Genel Duyuru Yok
+Genel Duyuru Yok
+Etkinlikler Genel Duyuru Yok
+Etkinlikler Genel Duyuru Yok
+Genel Duyuru Yok
+Sayfa Duyuruları Duyurular için tıklayınız
+Sayfa Duyuruları Duyurular için tıklayınız
+Sayfa Duyuruları Duyurular için tıklayınız
+Duyurular için tıklayınız -> [LINK: https://obs.firat.edu.tr/oibs/start.aspx?gkm=751c198623a998ed6b02a021bfb13669dd596261af0e0152dfaf9a164364201176a437b4ddd95447f2a2a2d2c3ec01104ecc8621ae4aa63c4102403e6ab2e0558353a4aaa698c386840c88b0a7bccd5b38a9b96bd155c00765428ba1d885c971]
+Mezunlar + −
+Mezunlar + −
+Mezunlar + −
+© Fırat Üniversitesi
+© Fırat Üniversitesi
+© Fırat Üniversitesi
+© Fırat Üniversitesi
+Mezunlar Portalı Girişi × Güvenlik Kodunu Seslendirmek İçin Enter tuşuna basınız T.C.Kimlik No Şifre (⇪Caps Lock) Sayıların Toplamı Giriş Şifremi Unuttum Oturum Açmak İçin Kalan Süre E-Devlet İle Giriş Sayfayı Yenile
+Mezunlar Portalı Girişi × Güvenlik Kodunu Seslendirmek İçin Enter tuşuna basınız T.C.Kimlik No Şifre (⇪Caps Lock) Sayıların Toplamı Giriş Şifremi Unuttum Oturum Açmak İçin Kalan Süre E-Devlet İle Giriş Sayfayı Yenile
+Mezunlar Portalı Girişi × Güvenlik Kodunu Seslendirmek İçin Enter tuşuna basınız T.C.Kimlik No Şifre (⇪Caps Lock) Sayıların Toplamı Giriş Şifremi Unuttum Oturum Açmak İçin Kalan Süre E-Devlet İle Giriş Sayfayı Yenile
+Mezunlar Portalı Girişi ×
+Güvenlik Kodunu Seslendirmek İçin Enter tuşuna basınız T.C.Kimlik No Şifre (⇪Caps Lock) Sayıların Toplamı Giriş Şifremi Unuttum Oturum Açmak İçin Kalan Süre E-Devlet İle Giriş Sayfayı Yenile
+Güvenlik Kodunu Seslendirmek İçin Enter tuşuna basınız -> [LINK: javascript:__doPostBack('btnAudioEnable','')]
+Giriş -> [LINK: javascript:__doPostBack('btnLogin','')]
+Şifremi Unuttum -> [LINK: javascript:__doPostBack('btnSifreUnuttum','')]
+E-Devlet İle Giriş -> [LINK: javascript:__doPostBack('btnEdevletLogin','')]
+Sayfayı Yenile -> [LINK: javascript:__doPostBack('btnRefresh','')]

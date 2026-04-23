@@ -1,0 +1,17 @@
+SOURCE URL: https://obs.firat.edu.tr/
+--------------------------------------------------
+Fırat Üniversitesi Öğrenci Bilgi Sistemi English Önlisans / Lisans / Enstitü Öğrenci Girişi Akademisyen Girişi İdari Personel Girişi Mezun Öğrenci Girişi
+Fırat Üniversitesi Öğrenci Bilgi Sistemi
+Fırat Üniversitesi
+Öğrenci Bilgi Sistemi
+English Önlisans / Lisans / Enstitü Öğrenci Girişi Akademisyen Girişi İdari Personel Girişi Mezun Öğrenci Girişi
+English
+English -> [LINK: javascript:__doPostBack('btnChangeLanguage','')]
+Önlisans / Lisans / Enstitü Öğrenci Girişi Akademisyen Girişi İdari Personel Girişi Mezun Öğrenci Girişi
+Önlisans / Lisans / Enstitü
+Önlisans / Lisans / Enstitü
+Önlisans / Lisans / Enstitü
+Önlisans / Lisans / Enstitü -> [LINK: https://obs.firat.edu.tr/]
+Akademisyen Girişi -> [LINK: https://obs.firat.edu.tr/oibs/acd/login.aspx]
+İdari Personel Girişi -> [LINK: https://obs.firat.edu.tr/oibs/login.aspx]
+Mezun Öğrenci Girişi -> [LINK: https://obs.firat.edu.tr/oibs/kariyer/login.aspx]

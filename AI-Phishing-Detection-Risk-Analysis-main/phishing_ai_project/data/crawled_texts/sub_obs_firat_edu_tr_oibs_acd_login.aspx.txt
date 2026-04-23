@@ -1,0 +1,16 @@
+SOURCE URL: https://obs.firat.edu.tr/oibs/acd/login.aspx
+--------------------------------------------------
+Merkezi Kimlik Doğrulama Servisi Kullanıcı Adı ve Parolanızı giriniz English | Türkçe Şifre Değiştir | Şifremi Unuttum
+Merkezi Kimlik Doğrulama Servisi Kullanıcı Adı ve Parolanızı giriniz English | Türkçe Şifre Değiştir | Şifremi Unuttum
+Merkezi Kimlik Doğrulama Servisi Kullanıcı Adı ve Parolanızı giriniz English | Türkçe Şifre Değiştir | Şifremi Unuttum
+Merkezi Kimlik Doğrulama Servisi Kullanıcı Adı ve Parolanızı giriniz English | Türkçe Şifre Değiştir | Şifremi Unuttum
+Merkezi Kimlik Doğrulama Servisi
+Merkezi Kimlik Doğrulama Servisi -> [LINK: https://obs.firat.edu.tr/oibs/acd/login]
+Kullanıcı Adı ve Parolanızı giriniz English | Türkçe Şifre Değiştir | Şifremi Unuttum
+Kullanıcı Adı ve Parolanızı giriniz English | Türkçe Şifre Değiştir | Şifremi Unuttum
+Kullanıcı Adı ve Parolanızı giriniz
+English | Türkçe
+English -> [LINK: https://obs.firat.edu.tr/oibs/acd/login?service=https://obs.firat.edu.tr/oibs/acd&locale=en]
+Türkçe -> [LINK: https://obs.firat.edu.tr/oibs/acd/login?service=https://obs.firat.edu.tr/oibs/acd&locale=tr]
+Şifre Değiştir -> [LINK: https://obs.firat.edu.tr/oibs/acd/login.aspx]
+Şifremi Unuttum -> [LINK: https://obs.firat.edu.tr/oibs/acd/login.aspx]
