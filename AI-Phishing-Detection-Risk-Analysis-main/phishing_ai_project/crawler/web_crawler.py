@@ -197,6 +197,48 @@ def crawl_recursive(start_url, max_pages=5, max_depth=3):
         
     return all_results
 
+def crawl_with_cloudflare(url: str):
+    """
+    Cloudflare Browser Rendering API ile crawl eder.
+    JavaScript render eden siteler için BeautifulSoup'a göre çok daha güçlüdür.
+    Kaynak: https://developers.cloudflare.com/browser-rendering/
+    USE_CLOUDFLARE = False iken otomatik olarak crawl_site'a düşer.
+    """
+    CLOUDFLARE_ACCOUNT_ID = "YOUR_API_TOKEN "
+    CLOUDFLARE_API_TOKEN = "YOUR_API_TOKEN "
+
+    try:
+        print(f"[CLOUDFLARE] API isteği gönderiliyor: {url}")
+        response = requests.post(
+            f"https://api.cloudflare.com/client/v4/accounts/{CLOUDFLARE_ACCOUNT_ID}/browser-rendering/content",
+            headers={
+                "Authorization": f"Bearer {CLOUDFLARE_API_TOKEN}",
+                "Content-Type": "application/json"
+            },
+            json={
+                "url": url,
+                "screenshotOptions": {"fullPage": False},
+                "waitFor": 1000
+            },
+            timeout=20
+        )
+        print(f"[CLOUDFLARE] Response status: {response.status_code}")
+        if response.status_code == 200:
+            print(f"[CLOUDFLARE] ✓ Başarılı — JS render tamamlandı")
+            data = response.json()
+            content = data.get("result", {})
+            page_text = content.get("text", "")
+            html = content.get("html", "")
+            print(f"[CLOUDFLARE] ✓ '{url}' başarıyla crawl edildi")
+            return page_text, set(), html
+        else:
+            print(f"[CLOUDFLARE] ✗ Hata: {response.text[:200]}")
+            print(f"[CLOUDFLARE] API hatası {response.status_code} — BeautifulSoup'a geçiliyor")
+            return crawl_site(url)
+    except Exception as e:
+        print(f"[CLOUDFLARE ERROR] {e} — BeautifulSoup'a geçiliyor")
+        return crawl_site(url)
+
 def crawl_multiple_sites(urls):
     """
     Verilen URL listesini dolaşır ve her birini recursive olarak tarar.

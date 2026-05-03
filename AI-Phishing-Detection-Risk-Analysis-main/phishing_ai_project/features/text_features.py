@@ -18,6 +18,9 @@ Açıklama:
     6. external_link_ratio            — Farklı domain'e giden link oranı
     7. hidden_element_count           — Gizli element sayısı
     8. favicon_foreign                — Favicon farklı domain'den mi (0/1)
+    9. urgency_score                  — Aciliyet/Manipülasyon kelimeleri sayısı
+    10. typo_ratio                    — Yazım hatası oranı
+    11. panic_score                   — Panik/Korku tonu skoru
 """
 
 import re
@@ -125,6 +128,13 @@ def extract_text_features(page_text: str, html: str) -> dict:
     Returns:
         dict: TEXT_FEATURE_KEYS ile tanımlı feature sözlüğü.
               Hata durumunda ilgili feature 0 değerini alır.
+
+    Modern web crawler alternatifleri:
+    - Cloudflare Browser Rendering API (/crawl endpoint)
+    - Puppeteer, Selenium, Playwright
+    Bu sistem BeautifulSoup tabanlı crawling kullanmaktadır.
+    Cloudflare API entegrasyonu için USE_CLOUDFLARE=True yapın.
+    Kaynak: https://developers.cloudflare.com/browser-rendering/
     """
     text_lower = (page_text or "").lower()
 
@@ -138,6 +148,72 @@ def extract_text_features(page_text: str, html: str) -> dict:
     # 0-100 normalize: TF-IDF skoru * 15 + kelime sayısı * 4, max 100
     raw_risk = phishing_tfidf_weighted_score * 15 + phishing_lexicon_mention_count * 4
     phishing_text_risk_0_100 = round(min(raw_risk, 100.0), 2)
+
+    # ── YENİ NLP ÖZELLİKLERİ (urgency_score, typo_ratio, panic_score) ─────
+    
+    # 1. urgency_score
+    PHISHING_URGENCY_WORDS = [
+        "hemen", "acil", "dikkat", "uyarı", "son dakika", "hesabınız askıya", "derhal",
+        "kaybedeceksiniz", "süreniz dolmak", "tıklayın", "doğrulayın", "güncellemeniz gerekiyor",
+        "engellenecek", "silinecek",
+        "urgent", "immediately", "your account will be", "click now", "verify now",
+        "suspended", "limited time", "act now", "warning", "alert", "expires", "locked"
+    ]
+    
+    ECOMMERCE_WHITELIST = [
+        'fırsat', 'indirim', 'kampanya', 'teklif', 'fiyat', 'ürün',
+        'sepet', 'kargo', 'teslimat', 'sipariş', 'alışveriş', 'marka',
+        'yeni sezon', 'stok', 'adet', 'beden', 'renk', 'model',
+        'ücretsiz', 'bedava', 'bonus', 'puan', 'hediye',
+        'dikkat', 'siyah', 'beyaz', 'kırmızı', 'mavi', 'yeşil',
+        'titanium', 'premium', 'özel', 'seçim', 'popüler', 'trend',
+        'bugün', 'hafta', 'ay', 'yıl', 'sezon', 'koleksiyon'
+    ]
+
+    urgency_score = 0
+    for word in PHISHING_URGENCY_WORDS:
+        if word not in ECOMMERCE_WHITELIST:
+            urgency_score += text_lower.count(word)
+
+    # 2. typo_ratio
+    DICTIONARY_WORDS = {
+        "the", "and", "or", "is", "are", "was", "were", "be", "been", "being", "have", "has", "had", 
+        "do", "does", "did", "will", "would", "could", "should", "may", "might", "shall", "can", "need", 
+        "dare", "ought", "used", "bir", "ve", "ile", "için", "bu", "da", "de", "ki", "mi", "mu", "mı", 
+        "değil", "var", "yok", "olan", "olarak", "gibi", "kadar", "sonra", "önce", "her", "hiç", "çok", 
+        "az", "daha", "en", "hem", "ya", "ne", "nasıl", "neden", "hangi", "kim", "nerede", "zaman", "şimdi", "artık",
+        "türkiye", "türk", "ürün", "fiyat", "kargo", "indirim", "kampanya", "sepet", "sipariş", "teslimat", 
+        "müşteri", "hizmet", "destek", "yardım", "bilgi", "iletişim", "hakkında", "kategori", "marka", "sezon", 
+        "yeni", "büyük", "küçük", "renk", "beden", "adet", "stok", "satış", "alış", "veriş"
+    }
+    words = re.findall(r'\b[a-zçğıöşü]+\b', text_lower)
+    valid_words_to_check = [w for w in words if len(w) >= 3 and not w.isdigit()]
+    
+    typo_ratio = 0.0
+    if len(words) >= 50 and valid_words_to_check:
+        typos = sum(1 for w in valid_words_to_check if w not in DICTIONARY_WORDS)
+        typo_ratio = round(typos / len(valid_words_to_check), 4)
+
+    # 3. panic_score
+    panic_score = 0.0
+    # Büyük harf kelimeler (tamamı büyük, 5+ karakter)
+    upper_words = re.findall(r'\b[A-ZÇĞİÖŞÜ]{5,}\b', page_text or "")
+    panic_score += len(upper_words) * 0.5
+    
+    # Ünlem işareti sayısı
+    exclamation_count = sum(1 for line in (page_text or "").split('\n') if line.count('!') > 2)
+    panic_score += exclamation_count * 0.5
+    
+    # !!! veya ??? gibi tekrarlı noktalama
+    repeated_punct = len(re.findall(r'[!\?]{2,}', page_text or ""))
+    panic_score += repeated_punct
+    
+    # URGENT, WARNING, ALERT, DİKKAT, ACİL, UYARI kelimeleri (Büyük harf)
+    panic_keywords = ["URGENT", "WARNING", "ALERT", "DİKKAT", "ACİL", "UYARI"]
+    panic_kw_count = sum((page_text or "").count(kw) for kw in panic_keywords)
+    panic_score += panic_kw_count * 2
+    
+    panic_score = min(round(panic_score, 2), 10.0)
 
     # ── HTML Özellikleri ──────────────────────────────────────────────────
     form_count = 0
@@ -198,13 +274,17 @@ def extract_text_features(page_text: str, html: str) -> dict:
         "external_link_ratio":            external_link_ratio,
         "hidden_element_count":           hidden_element_count,
         "favicon_foreign":                favicon_foreign,
+        "urgency_score":                  urgency_score,
+        "typo_ratio":                     typo_ratio,
+        "panic_score":                    panic_score,
     }
 
     print(
         f"[TEXT FEATURES] tfidf={phishing_tfidf_weighted_score:.3f} | "
         f"lexicon={phishing_lexicon_mention_count} | "
         f"risk={phishing_text_risk_0_100} | "
-        f"form={form_count} | input={input_count}"
+        f"form={form_count} | input={input_count} | "
+        f"urgency={urgency_score} | typo={typo_ratio} | panic={panic_score}"
     )
     return features
 
@@ -221,6 +301,9 @@ TEXT_FEATURE_KEYS = (
     "external_link_ratio",
     "hidden_element_count",
     "favicon_foreign",
+    "urgency_score",
+    "typo_ratio",
+    "panic_score",
 )
 
 

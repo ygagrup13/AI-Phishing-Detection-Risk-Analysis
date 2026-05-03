@@ -17,10 +17,12 @@ from pydantic import BaseModel, HttpUrl
 import uvicorn
 from typing import List, Optional
 
-from crawler.web_crawler import crawl_site
+from crawler.web_crawler import crawl_site, crawl_with_cloudflare
 from features.url_features import extract_url_features
 from features.text_features import extract_text_features
 from model.ml_model import predict_phishing
+
+USE_CLOUDFLARE = True  # Cloudflare API anahtarı varsa True yap
 
 # ---------------------------------------------------------------------------
 # 📦 Veri Modelleri (Pydantic ile Doğrulama)
@@ -37,6 +39,7 @@ class AnalyzeResponse(BaseModel):
     risk_level: str
     suspicious_features: List[str]
     features: Optional[dict] = None
+    warning: Optional[str] = None
     error: Optional[str] = None
 
 # ---------------------------------------------------------------------------
@@ -73,7 +76,10 @@ def analyze_url(request: AnalyzeRequest):
     try:
         # 1. Crawler
         try:
-            page_text, links, html = crawl_site(url_str)
+            if USE_CLOUDFLARE:
+                page_text, links, html = crawl_with_cloudflare(url_str)
+            else:
+                page_text, links, html = crawl_site(url_str)
         except Exception as e:
             print(f"[API] Crawler Hatası: {e}")
             page_text, html = "", ""
@@ -88,6 +94,7 @@ def analyze_url(request: AnalyzeRequest):
         feature_vector = {}
         feature_vector.update(url_feats)
         feature_vector.update(text_feats)
+        feature_vector["_url"] = url_str
         
         # 5. ML Tahmini
         result = predict_phishing(feature_vector)
@@ -100,7 +107,8 @@ def analyze_url(request: AnalyzeRequest):
             risk_score=result["risk_score"],
             risk_level=result["risk_level"],
             suspicious_features=result["suspicious_features"],
-            features=feature_vector
+            features=feature_vector,
+            warning=result.get("warning")
         )
         
     except Exception as e:

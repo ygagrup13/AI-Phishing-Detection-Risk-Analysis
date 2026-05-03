@@ -82,7 +82,9 @@
     .title .ai {
       background: linear-gradient(90deg, var(--primary), var(--secondary));
       -webkit-background-clip: text;
+      background-clip: text;
       -webkit-text-fill-color: transparent;
+      color: transparent;
       text-shadow: none;
     }
     .title-line {
@@ -367,10 +369,11 @@
 
       <div id="animContainer" class="anim-container">
         <div class="anim-step" id="step1">◆ Hedef URL taranıyor...</div>
-        <div class="anim-step" id="step2">◆ URL yapısı analiz ediliyor...</div>
-        <div class="anim-step" id="step3">◆ NLP motoru çalışıyor...</div>
-        <div class="anim-step" id="step4">◆ ML modeli tahmin yapıyor...</div>
-        <div class="anim-step" id="step5" style="color: var(--safe);">✓ Analiz tamamlandı.</div>
+        <div class="anim-step" id="step2">◆ Cloudflare/BeautifulSoup crawler aktif...</div>
+        <div class="anim-step" id="step3">◆ 20 URL feature çıkarılıyor...</div>
+        <div class="anim-step" id="step4">◆ NLP motoru çalışıyor (urgency, panic, typo analizi)...</div>
+        <div class="anim-step" id="step5">◆ Random Forest modeli tahmin yapıyor...</div>
+        <div class="anim-step" id="step6" style="color: var(--safe);">✓ Analiz tamamlandı.</div>
       </div>
 
       <div id="errorCard" class="error-card">
@@ -399,6 +402,7 @@
         <div class="verdict-title" id="verdictTitle">GÜVENLİ</div>
         <div class="verdict-conf" id="verdictConf">%0 güven</div>
         <div class="verdict-url" id="verdictUrl">-</div>
+        <div id="warningBox" style="display: none; margin-top: 1rem; padding: 0.8rem; background: rgba(245, 158, 11, 0.1); border: 1px solid var(--warning); border-radius: 8px; color: var(--warning); font-size: 0.9rem; font-weight: 500; width: 100%;"></div>
       </div>
 
       <!-- Features Panel -->
@@ -537,6 +541,7 @@
     const verdictTitle = document.getElementById('verdictTitle');
     const verdictConf = document.getElementById('verdictConf');
     const verdictUrl = document.getElementById('verdictUrl');
+    const warningBox = document.getElementById('warningBox');
     const featuresList = document.getElementById('featuresList');
 
     const featureMap = {
@@ -555,19 +560,23 @@
       'external_link_ratio': '🔀 Yüksek Dış Link Oranı',
       'form_count': '📋 Çok Sayıda Form',
       'favicon_foreign': '🖼️ Yabancı Favicon',
-      'phishing_lexicon_mention_count': '📖 Phishing Kelime Tespiti'
+      'phishing_lexicon_mention_count': '📖 Phishing Kelime Tespiti',
+      'typosquatting': '🎭 Marka Taklidi (Typosquatting) Tespit Edildi',
+      'urgency_score': '🚨 Aciliyet İfadesi Tespit Edildi',
+      'panic_score': '😱 Panik/Korku Tonu Tespit Edildi',
+      'typo_ratio': '✏️ Yüksek Yazım Hatası Oranı'
     };
 
     const delay = ms => new Promise(res => setTimeout(res, ms));
 
     async function runAnimation() {
       animContainer.style.display = 'block';
-      for(let i=1; i<=5; i++) {
+      for(let i=1; i<=6; i++) {
         document.getElementById('step'+i).classList.remove('active');
       }
       
-      for(let i=1; i<=5; i++) {
-        await delay(400);
+      for(let i=1; i<=6; i++) {
+        await delay(350);
         document.getElementById('step'+i).classList.add('active');
       }
       await delay(400);
@@ -672,8 +681,30 @@
         verdictTitle.textContent = isPhishing ? 'PHİSHİNG TESPİT EDİLDİ' : 'GÜVENLİ';
         verdictTitle.style.color = isPhishing ? 'var(--danger)' : 'var(--safe)';
         
-        verdictConf.textContent = `%${Math.round(data.confidence * 100)} güven oranı`;
+        let displayConfidence;
+        if (data.label === 'LEGITIMATE') {
+            displayConfidence = 100 - data.risk_score;
+        } else {
+            displayConfidence = data.risk_score;
+        }
+        displayConfidence = Math.max(displayConfidence, data.label === 'LEGITIMATE' ? 50 : 10);
+
+        if (data.label === 'LEGITIMATE') {
+            verdictConf.textContent = `%${displayConfidence} güvenli`;
+            verdictConf.style.color = 'var(--safe)';
+        } else {
+            verdictConf.textContent = `%${displayConfidence} risk`;
+            verdictConf.style.color = 'var(--danger)';
+        }
+
         verdictUrl.textContent = data.url;
+
+        if (data.warning) {
+            warningBox.innerHTML = `⚠️ ${data.warning}`;
+            warningBox.style.display = 'block';
+        } else {
+            warningBox.style.display = 'none';
+        }
 
         renderFeatures(data.suspicious_features);
 
@@ -707,7 +738,10 @@
           { key: 'dash_count', label: 'Tire Sayısı' },
           { key: 'suspicious_keyword_count', label: 'Şüpheli Kelime' },
           { key: 'is_suspicious_tld', label: 'Şüpheli Uzantı' },
-          { key: 'url_entropy', label: 'URL Entropi Skoru' }
+          { key: 'url_entropy', label: 'URL Entropi Skoru' },
+          { key: 'urgency_score', label: 'Aciliyet/Manipülasyon Skoru' },
+          { key: 'panic_score', label: 'Panik/Korku Tonu' },
+          { key: 'typo_ratio', label: 'Yazım Hatası Oranı' }
         ];
 
         analysisKeys.forEach(item => {
