@@ -1,4 +1,3 @@
-# Phishing (oltalama) web sitelerini tespit etmek için yapay zeka, otomatik web tarama, özellik çıkarımı ve risk analizi kullanan bir sistem.
 # 🛡️ PhishGuard AI — Yapay Zeka Destekli Phishing Tespit Sistemi
 
 > Fırat Üniversitesi Yazılım Mühendisliği Bölümü 
