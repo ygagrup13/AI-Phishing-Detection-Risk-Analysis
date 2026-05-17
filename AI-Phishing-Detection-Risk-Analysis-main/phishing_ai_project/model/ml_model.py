@@ -247,20 +247,41 @@ def predict_phishing(feature_vector: dict) -> dict:
             "note":                "Localhost/özel ağ adresi — analiz dışı",
         }
 
-    # Bilinen markalar listesi
     KNOWN_BRANDS = [
         'google', 'microsoft', 'apple', 'amazon', 'facebook', 'instagram',
-        'twitter', 'netflix', 'paypal', 'ebay', 'linkedin', 'youtube',
+        'twitter', 'netflix', 'paypal', 'ebay', 'linkedin', 'youtube', 'youtu', 'fb',
         'whatsapp', 'telegram', 'trendyol', 'hepsiburada', 'gittigidiyor',
         'sahibinden', 'ziraat', 'garanti', 'akbank', 'isbank', 'ykb',
         'turkiye', 'gov', 'edu', 'mil', 'dropbox', 'spotify', 'adobe',
-        'steam', 'epicgames', 'binance', 'coinbase', 'tiktok'
+        'steam', 'epicgames', 'binance', 'coinbase', 'tiktok',
+        'instagr', 'amzn', 'spoti', 't'
     ]
 
     def is_typosquatting(url: str) -> tuple:
+        # Resmi kısa domainler — typosquatting değil
+        OFFICIAL_SHORT_DOMAINS = {
+            'youtu': 'youtube',
+            'fb': 'facebook', 
+            'instagr': 'instagram',
+            'amzn': 'amazon',
+            'spoti': 'spotify',
+            't': 'twitter',
+            'wa': 'whatsapp',
+            'ln': 'linkedin',
+        }
+        
         try:
             hostname = urlparse(url).hostname or ""
+            
+            # youtu.be → youtube resmi kısa linki
+            if hostname.lower() in ['youtu.be', 'fb.com', 'instagr.am', 'amzn.to', 'spoti.fi', 't.co', 'wa.me']:
+                return False, None
+
             domain = hostname.replace('www.', '').split('.')[0].lower()
+            
+            if domain in OFFICIAL_SHORT_DOMAINS:
+                return False, None  # Resmi kısa domain, typosquatting değil
+
             for brand in KNOWN_BRANDS:
                 if domain == brand:
                     return False, None
@@ -275,6 +296,13 @@ def predict_phishing(feature_vector: dict) -> dict:
     
     # Modele sadece eğitildiği URL featurelarını gönder
     ordered = {col: float(feature_vector.get(col, 0)) for col in FEATURE_COLUMNS}
+    
+    try:
+        if hasattr(model, 'feature_names_in_'):
+            ordered = {col: ordered.get(col, 0) for col in model.feature_names_in_}
+    except Exception:
+        pass
+        
     X = pd.DataFrame([ordered])
 
     try:
@@ -298,6 +326,29 @@ def predict_phishing(feature_vector: dict) -> dict:
 
     # Kural tabanlı NLP risk ekleme — sadece güçlü sinyaller
     additional_risk = 0
+
+    # Kural tabanlı NLP risk ekleme — sadece güçlü sinyaller
+    additional_risk = 0
+
+    # 1. Protokol (Scheme) Kontrolleri
+    url_str = feature_vector.get('_url', '')
+    
+    # Frontend bazen "http://" ekleyebiliyor (örneğin hllps:// yazıldığında http://hllps:// oluyor)
+    # Bu yüzden doğrudan url_str üzerinde kontrol yapıyoruz
+    if 'hllps://' in url_str.lower() or 'htps://' in url_str.lower() or 'httos://' in url_str.lower() or 'hppts://' in url_str.lower():
+        additional_risk += 60
+        if 'protocol_typosquatting' not in suspicious_features:
+            suspicious_features.append('protocol_typosquatting')
+            
+    # Eğer protokol http veya https dışında bir şeyse (ve üstteki typosquatting değilse)
+    parsed_url = urlparse(url_str)
+    scheme = parsed_url.scheme.lower()
+    if scheme and scheme not in ['http', 'https', 'ftp', ''] and 'protocol_typosquatting' not in suspicious_features:
+        additional_risk += 40
+        if 'invalid_scheme' not in suspicious_features:
+            suspicious_features.append('invalid_scheme')
+
+
 
     # NLP sinyalleri — eşikler yükseltildi
     if float(feature_vector.get('phishing_tfidf_weighted_score', 0)) > 3.0:
@@ -347,6 +398,12 @@ def predict_phishing(feature_vector: dict) -> dict:
         label = "PHISHING"
     else:
         label = "LEGITIMATE"
+
+    if feature_vector.get('is_trusted_tld', 0) == 1:
+        risk_score = max(risk_score - 40, 5)
+        if label == 'PHISHING':
+            label = 'LEGITIMATE'
+            confidence = 1 - confidence
 
     if risk_score <= 40:
         risk_level = "Düşük"

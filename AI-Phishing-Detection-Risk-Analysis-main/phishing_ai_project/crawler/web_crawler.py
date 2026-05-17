@@ -204,8 +204,8 @@ def crawl_with_cloudflare(url: str):
     Kaynak: https://developers.cloudflare.com/browser-rendering/
     USE_CLOUDFLARE = False iken otomatik olarak crawl_site'a düşer.
     """
-    CLOUDFLARE_ACCOUNT_ID = "YOUR_API_ID"
-    CLOUDFLARE_API_TOKEN = "YOUR_API_TOKEN"
+    CLOUDFLARE_ACCOUNT_ID = ""
+    CLOUDFLARE_API_TOKEN = ""
 
     try:
         print(f"[CLOUDFLARE] API isteği gönderiliyor: {url}")
@@ -216,9 +216,7 @@ def crawl_with_cloudflare(url: str):
                 "Content-Type": "application/json"
             },
             json={
-                "url": url,
-                "screenshotOptions": {"fullPage": False},
-                "waitFor": 1000
+                "url": url
             },
             timeout=20
         )
@@ -227,8 +225,14 @@ def crawl_with_cloudflare(url: str):
             print(f"[CLOUDFLARE] ✓ Başarılı — JS render tamamlandı")
             data = response.json()
             content = data.get("result", {})
-            page_text = content.get("text", "")
-            html = content.get("html", "")
+            
+            if isinstance(content, str):
+                html = content
+                page_text = clean_text(html)
+            else:
+                page_text = content.get("text", "")
+                html = content.get("html", "")
+                
             print(f"[CLOUDFLARE] ✓ '{url}' başarıyla crawl edildi")
             return page_text, set(), html
         else:

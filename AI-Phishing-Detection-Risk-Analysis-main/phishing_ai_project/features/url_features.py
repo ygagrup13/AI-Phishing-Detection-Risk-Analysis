@@ -38,6 +38,20 @@ def calculate_entropy(text: str) -> float:
     return -sum(p * math.log2(p) for p in probs)
 
 
+TRUSTED_TLDS = [
+    '.edu.tr', '.gov.tr', '.edu', '.gov', '.mil',
+    '.ac.uk', '.edu.au', '.ac.jp'
+]
+
+def is_trusted_tld(url: str) -> int:
+    try:
+        from urllib.parse import urlparse
+        hostname = urlparse(url).hostname or ""
+        return 1 if any(hostname.endswith(t) for t in TRUSTED_TLDS) else 0
+    except:
+        return 0
+
+
 # -----------------------------------------------------------------------------
 # 🔍 URL Özelliklerini Çıkarma
 # -----------------------------------------------------------------------------
@@ -119,6 +133,7 @@ def extract_url_features(url: str) -> dict:
         "https_in_domain": 1 if (
             "https" in domain.lower() or "https" in subdomain.lower()
         ) else 0,
+        "is_trusted_tld": is_trusted_tld(url),
     }
 
     return features
@@ -151,6 +166,7 @@ URL_FEATURE_KEYS = (
     "digit_ratio",
     "has_double_extension",
     "https_in_domain",
+    "is_trusted_tld",
 )
 
 

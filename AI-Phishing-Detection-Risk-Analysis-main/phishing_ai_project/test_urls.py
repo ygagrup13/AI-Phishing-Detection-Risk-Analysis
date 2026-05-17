@@ -3,11 +3,9 @@ import urllib.request
 import urllib.error
 
 urls_to_test = [
-    "https://www.google.com",
-    "https://www.trendyol.com",
-    "https://www.hepsiburada.com",
-    "http://secure-login-paypal.xyz/update-account",
-    "https://nicrosoft.com"
+    "https://jasig.firat.edu.tr/cas/login?service=https://obs.firat.edu.tr",
+    "http://secure-login-paypal.xyz",
+    "https://gov.tr"
 ]
 
 url_api = "http://127.0.0.1:8000/analyze"

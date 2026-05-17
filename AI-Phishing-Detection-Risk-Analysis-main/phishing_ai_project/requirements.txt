@@ -9,8 +9,6 @@ scikit-learn
 
 # URL Özellik Çıkarımı
 tldextract
-re
-urllib.parse
 
 # API ve Web Servis
 fastapi
