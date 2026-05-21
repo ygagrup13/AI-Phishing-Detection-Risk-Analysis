@@ -236,28 +236,36 @@ def analyze_url(request: AnalyzeRequest):
         # Crawler'dan dönen metin boşsa site erişilemez demektir
         site_accessible = bool(page_text and len(page_text.strip()) > 50)
 
-        # Typosquatting varsa site erişilemez olsa bile PHISHING kal — override etme
-        has_typosquatting = 'typosquatting' in result.get('suspicious_features', [])
-        has_taklit_warning = any(
-            word in str(result.get('warning', '')).lower()
-            for word in ['taklit', 'typosquat', 'marka', 'similar']
-        )
+        # 1. Önce typosquatting kontrolü — site erişilemez olsa bile PHISHING kalmalı
+        is_typosquatting = 'typosquatting' in result.get('suspicious_features', [])
 
-        if has_typosquatting or has_taklit_warning:
-            # Typosquatting tespit edildi — label değişmesin, sadece erişim notu ekle
+        if is_typosquatting:
+            # Site kapalı olsa bile PHISHING kal, risk düşürme
+            result['label'] = 'PHISHING'
             if not site_accessible:
-                result['warning'] = str(result.get('warning', '')) + " (Site erişilemez durumda)"
+                existing_warning = result.get('warning', '')
+                result['warning'] = existing_warning + " (Site şu an erişilemez durumda)"
+
+        # 2. Sonra site erişilebilirlik kontrolü
         elif not site_accessible:
-            if result['label'] == 'PHISHING':
-                result['warning'] = "⚠️ Bu siteye erişilemedi ancak URL yapısı phishing belirtileri taşıyor."
-                result['confidence'] = round(result['confidence'] * 0.8, 2)
-            else:
-                result['label'] = 'BELİRSİZ'
-                result['warning'] = "⚠️ Bu siteye erişilemedi. URL yapısı temiz görünüyor ancak doğrulanamadı."
-                result['risk_score'] = min(result['risk_score'], 30)
-                result['risk_level'] = 'Düşük'
+            # Erişilemeyen site — her durumda ERİŞİLEMEYEN dönsün
+            return {
+                "url": url_str,
+                "status": "inaccessible",
+                "label": "ERİŞİLEMEYEN",
+                "confidence": 0,
+                "risk_score": 0,
+                "risk_level": "Bilinmiyor",
+                "suspicious_features": [],
+                "warning": f'"{url_str}" adresine bağlanılamadı. Site mevcut değil veya erişilemiyor olabilir. URL\'yi kontrol edip tekrar deneyin.',
+                "error": None
+            }
         elif is_page_not_found(page_text):
             result["warning"] = "⚠️ Bu sayfa mevcut değil veya erişilemiyor. URL geçersiz olabilir."
+
+        # 3. Tutarlılık kontrolü — şüpheli özellik yoksa risk düşük olmalı
+        if len(result.get('suspicious_features', [])) == 0 and result.get('label') == 'LEGITIMATE':
+            result['risk_score'] = min(result['risk_score'], 15)
 
         # validate_url'den gelen uyarıyı yalnızca başka warning yoksa ekle
         if url_warning and not result.get("warning"):

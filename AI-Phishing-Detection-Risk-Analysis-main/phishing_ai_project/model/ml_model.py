@@ -261,7 +261,7 @@ def predict_phishing(feature_vector: dict) -> dict:
         # Resmi kısa domainler — typosquatting değil
         OFFICIAL_SHORT_DOMAINS = {
             'youtu': 'youtube',
-            'fb': 'facebook', 
+            'fb': 'facebook',
             'instagr': 'instagram',
             'amzn': 'amazon',
             'spoti': 'spotify',
@@ -269,26 +269,111 @@ def predict_phishing(feature_vector: dict) -> dict:
             'wa': 'whatsapp',
             'ln': 'linkedin',
         }
-        
+
+        # Leet / homoglyph normalizasyonu (0→o, 1→i, 3→e, 4→a, 5→s, 6→b, 8→g, @→a)
+        LEET = {'0': 'o', '1': 'i', '3': 'e', '4': 'a', '5': 's', '6': 'b', '8': 'g', '@': 'a'}
+
+        # Unicode homoğlif haritalaması — NFD ile ayrışmayan ama ASCII karşılığı olan karakterler
+        # örn: Türkçe noktasız ı (U+0131), Kiril harfleri, vb.
+        HOMOGLYPHS = {
+            '\u0131': 'i',  # LATIN SMALL LETTER DOTLESS I (ı)
+            '\u0456': 'i',  # CYRILLIC SMALL LETTER BYELORUSSIAN-UKRAINIAN I
+            '\u04cf': 'i',  # CYRILLIC SMALL LETTER PALOCHKA
+            '\u0430': 'a',  # CYRILLIC SMALL LETTER A
+            '\u0435': 'e',  # CYRILLIC SMALL LETTER IE
+            '\u043e': 'o',  # CYRILLIC SMALL LETTER O
+            '\u0440': 'r',  # CYRILLIC SMALL LETTER ER
+            '\u0441': 'c',  # CYRILLIC SMALL LETTER ES
+            '\u0445': 'x',  # CYRILLIC SMALL LETTER HA
+            '\u0443': 'y',  # CYRILLIC SMALL LETTER U
+            '\u0440': 'p',  # CYRILLIC SMALL LETTER ER (alt)
+            '\u0301': '',   # COMBINING ACUTE ACCENT (aksanları sil)
+            '\u00e0': 'a', '\u00e1': 'a', '\u00e2': 'a', '\u00e3': 'a', '\u00e4': 'a',
+            '\u00e8': 'e', '\u00e9': 'e', '\u00ea': 'e', '\u00eb': 'e',
+            '\u00ec': 'i', '\u00ed': 'i', '\u00ee': 'i', '\u00ef': 'i',
+            '\u00f2': 'o', '\u00f3': 'o', '\u00f4': 'o', '\u00f5': 'o', '\u00f6': 'o',
+            '\u00f9': 'u', '\u00fa': 'u', '\u00fb': 'u', '\u00fc': 'u',
+            '\u00f1': 'n', '\u00e7': 'c',
+        }
+
+        def normalize(s: str) -> str:
+            return ''.join(LEET.get(c, c) for c in s)
+
+        def to_ascii_safe(s: str) -> str:
+            """Unicode string'i ASCII'ye dönüştür: homoğlif map + NFD diacritic stripping."""
+            import unicodedata as _ud
+            result = []
+            for c in s:
+                if ord(c) < 128:
+                    result.append(c)
+                elif c in HOMOGLYPHS:
+                    result.append(HOMOGLYPHS[c])
+                else:
+                    # NFD normalize edip Mn (diacritic) kategorisini kır
+                    decomposed = _ud.normalize('NFD', c)
+                    for dc in decomposed:
+                        if _ud.category(dc) != 'Mn' and ord(dc) < 128:
+                            result.append(dc)
+            return ''.join(result)
+
         try:
             hostname = urlparse(url).hostname or ""
-            
-            # youtu.be → youtube resmi kısa linki
+
+            # Resmi kısa domainler
             if hostname.lower() in ['youtu.be', 'fb.com', 'instagr.am', 'amzn.to', 'spoti.fi', 't.co', 'wa.me']:
                 return False, None
 
             domain = hostname.replace('www.', '').split('.')[0].lower()
-            
+
             if domain in OFFICIAL_SHORT_DOMAINS:
-                return False, None  # Resmi kısa domain, typosquatting değil
+                return False, None
+
+            domain_norm        = normalize(domain)            # g00gle → google
+            domain_nodash      = domain.replace('-', '')      # secure-login-paypal → secureloginpaypal
+            domain_nodash_norm = normalize(domain_nodash)
+
+            # IDN / Punycode çözme — xn--ncrosoft-tkb → nicrosoft / mıcrosoft → microsoft gibi
+            # Tarayıcı/Pydantic Unicode domainleri xn-- formatına çevirir
+            idn_domain = domain  # fallback
+            if domain.startswith('xn--'):
+                try:
+                    # Punycode → Unicode decode (örn: xn--mcrosoft-tkb → mıcrosoft)
+                    decoded_unicode = domain.encode('ascii').decode('idna')
+                    # Önce homoğlif map + NFD dönüşümü
+                    idn_domain = to_ascii_safe(decoded_unicode) or domain
+                except Exception:
+                    # Fallback: xn-- prefix + punycode suffix'ı kır, kalan ASCII kısmı al
+                    import re as _re
+                    m = _re.match(r'^xn--(.+)-[a-z0-9]{2,4}$', domain)
+                    idn_domain = m.group(1) if m else domain
+
+            idn_norm        = normalize(idn_domain)
+            idn_nodash      = idn_domain.replace('-', '')
+            idn_nodash_norm = normalize(idn_nodash)
 
             for brand in KNOWN_BRANDS:
-                if domain == brand:
-                    return False, None
-                ratio = SequenceMatcher(None, domain, brand).ratio()
-                if 0.70 <= ratio < 1.0 and domain != brand:
-                    return True, brand
-        except:
+                # Tam eşleşme kontrolü — SADECE ham domain == brand ise GEVÜENLİ
+                # IDN/leet sonrası eşleşme daima TYPOSQUATTING sayılır
+                for d_exact in (domain, domain_norm, idn_domain, idn_norm):
+                    if d_exact == brand:
+                        if domain == brand:          # örn: google.com → domain='google'
+                            return False, None       # Gerçek marka
+                        return True, brand           # Taklit: g00gle / mıcrosoft / mícrosoft
+
+                # Tire içeren domainlerde marka alt dize olarak geçiyor mu?
+                # Örn: secure-login-paypal → paypal, verify-amazon-account → amazon
+                if len(brand) >= 4:
+                    for nd in (domain_nodash, domain_nodash_norm, idn_nodash, idn_nodash_norm):
+                        if brand in nd and '-' in domain:
+                            return True, brand
+
+                # SequenceMatcher — ham, normalize, IDN ve IDN normalize üzerinde dene
+                for d in (domain, domain_norm, idn_domain, idn_norm):
+                    ratio = SequenceMatcher(None, d, brand).ratio()
+                    if 0.70 <= ratio < 1.0:
+                        return True, brand
+
+        except Exception:
             pass
         return False, None
 

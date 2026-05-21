@@ -414,7 +414,7 @@
       </div>
       
       <!-- Bottom Row Container -->
-      <div style="grid-column: 1 / -1; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+      <div class="cards-grid" style="grid-column: 1 / -1; display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
         <!-- URL Info Panel -->
         <div class="result-card">
           <div class="card-title">URL BİLGİLERİ</div>
@@ -668,78 +668,68 @@
         // Populate Results
         resultPanel.style.display = 'grid';
 
-        // ─── Erişilemeyen / Bulunamayan URL — Özel Gösterim ───────────────────
-        if (data.warning && (
-            data.warning.includes('Geçersiz') ||
-            data.warning.includes('bağlanılamadı') ||
-            data.warning.includes('bulunamadı') ||
-            data.warning.includes('mevcut olmayabilir')
-        )) {
-            // Gauge sıfırla, soru işareti göster
+        // ─── ERİŞİLEMEYEN adres kontrolü ──────────────────────────────────────
+        if (data.label === 'ERİŞİLEMEYEN' || data.status === 'inaccessible') {
+            // Gauge boş
             progressBar.style.strokeDashoffset = 314;
+            progressBar.style.stroke = '#F59E0B';
             riskScoreTxt.textContent = '?';
             riskScoreTxt.style.color = '#F59E0B';
             riskLevelTxt.textContent = 'BİLİNMİYOR';
             riskLevelTxt.style.color = '#F59E0B';
-            progressBar.style.stroke = '#F59E0B';
             riskCard.className = 'result-card glow-warning';
             verdictCard.className = 'result-card glow-warning';
 
-            // Verdict kartı
+            // Verdict
             verdictIcon.textContent = '⚠️';
             verdictTitle.textContent = 'ERİŞİLEMEYEN ADRES';
             verdictTitle.style.color = '#F59E0B';
             verdictConf.textContent = '';
             verdictUrl.textContent = data.url;
 
-            // Büyük warning kutusu
+            // Warning kutusu büyük göster
             warningBox.style.cssText = `
                 display: block;
-                background: rgba(245,158,11,0.15);
+                background: rgba(245,158,11,0.12);
                 border: 2px solid #F59E0B;
                 border-radius: 12px;
-                padding: 20px;
-                margin-top: 16px;
-                font-size: 15px;
-                font-weight: bold;
-                color: #F59E0B;
+                padding: 16px;
+                margin-top: 12px;
                 text-align: center;
-                width: 100%;
             `;
             warningBox.innerHTML = `
-                ⚠️ Bu adrese bağlanılamadı<br>
-                <span style="font-size:13px; font-weight:normal; color:#CBD5E1; margin-top:8px; display:block">
-                "${data.url}" adresi mevcut değil veya erişilemiyor olabilir.<br>
-                URL'yi kontrol edip tekrar deneyin.
-                </span>
-            `;
-
-            // Şüpheli özellikler kartını uyarı mesajıyla güncelle
-            const featuresList = document.getElementById('featuresList');
-            featuresList.innerHTML = `
-                <div style="
-                    padding: 16px;
-                    background: rgba(245,158,11,0.1);
-                    border: 1px solid rgba(245,158,11,0.3);
-                    border-radius: 8px;
-                    color: #F59E0B;
-                    font-size: 13px;
-                    text-align: center;
-                    width: 100%;
-                ">
-                    ⚠️ Site erişilemez olduğu için<br>
-                    içerik analizi yapılamadı.
+                <div style="font-size:14px; font-weight:bold; color:#F59E0B; margin-bottom:8px;">
+                    ⚠️ Bu adrese bağlanılamadı
+                </div>
+                <div style="font-size:12px; color:#CBD5E1; line-height:1.6;">
+                    "${data.url}" adresi mevcut değil veya erişilemiyor olabilir.<br>
+                    URL'yi kontrol edip tekrar deneyin.
                 </div>
             `;
-            // Şüpheli özellikler kartının kenarlığını da uyarı rengine çek
-            const featuresCard = featuresList.closest('.result-card');
-            if (featuresCard) {
-                featuresCard.style.borderColor = 'rgba(245,158,11,0.3)';
-                featuresCard.style.boxShadow = '0 0 30px rgba(245,158,11,0.1)';
-            }
-        } else {
 
-        // ─── Normal Sonuç Gösterimi ─────────────────────────────────────────
+            // Şüpheli özellikler kartı
+            featuresList.innerHTML = `
+                <div style="padding:12px; background:rgba(245,158,11,0.08); border:1px solid rgba(245,158,11,0.2); border-radius:8px; color:#F59E0B; font-size:12px; text-align:center;">
+                    ⚠️ Site erişilemez olduğu için içerik analizi yapılamadı.
+                </div>
+            `;
+            const featCardInacc = featuresList.closest('.result-card');
+            if (featCardInacc) {
+                featCardInacc.style.borderColor = 'rgba(245,158,11,0.3)';
+                featCardInacc.style.boxShadow = '0 0 30px rgba(245,158,11,0.1)';
+            }
+
+            // URL ve Feature kartlarını gizle
+            const cardsGridInacc = document.querySelector('.cards-grid');
+            if (cardsGridInacc) cardsGridInacc.style.display = 'none';
+
+            resultPanel.classList.add('show');
+            resultPanel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            return;
+        }
+
+        // ─── Normal akış ───────────────────────────────────────────────────────
+        document.querySelector('.cards-grid').style.display = 'grid';
 
         // Animate Circle
         const score = data.risk_score;
@@ -753,54 +743,34 @@
 
         const labelUpper = data.label.toUpperCase();
         const isPhishing  = labelUpper === 'PHISHING';
-        const isBelrsiz   = labelUpper === 'BELİRSİZ';
 
-        if (isBelrsiz) {
-            // Gauge — sarı, soru işareti
-            progressBar.style.strokeDashoffset = 314 - (data.risk_score / 100) * 314;
-            progressBar.style.stroke = '#F59E0B';
-            riskScoreTxt.textContent = data.risk_score;
-            riskScoreTxt.style.color = '#F59E0B';
-            riskLevelTxt.textContent = 'BELİRSİZ';
-            riskLevelTxt.style.color = '#F59E0B';
-            riskCard.className = 'result-card glow-warning';
-            verdictCard.className = 'result-card glow-warning';
+        // Normal PHISHING / LEGITIMATE gösterimi
+        setTimeout(() => {
+          const offset = 314 - (data.risk_score / 100) * 314;
+          progressBar.style.strokeDashoffset = offset;
+          riskScoreTxt.textContent = data.risk_score;
+        }, 100);
 
-            // Verdict kartı
-            verdictIcon.textContent = '❓';
-            verdictTitle.textContent = 'BELİRSİZ';
-            verdictTitle.style.color = '#F59E0B';
-            verdictConf.textContent = 'URL yapısı temiz ancak site doğrulanamadı';
-            verdictConf.style.color = '#94a3b8';
+        setRiskColor(data.risk_score, riskCard, verdictCard);
+
+        verdictIcon.textContent = isPhishing ? '⚠️' : '🛡️';
+        verdictTitle.textContent = isPhishing ? 'PHİSHİNG TESPİT EDİLDİ' : 'GÜVENLİ';
+        verdictTitle.style.color = isPhishing ? 'var(--danger)' : 'var(--safe)';
+
+        let displayConfidence;
+        if (data.label === 'LEGITIMATE') {
+            displayConfidence = 100 - data.risk_score;
         } else {
-            // Normal PHISHING / LEGITIMATE gösterimi
-            setTimeout(() => {
-              const offset = 314 - (data.risk_score / 100) * 314;
-              progressBar.style.strokeDashoffset = offset;
-              riskScoreTxt.textContent = data.risk_score;
-            }, 100);
+            displayConfidence = data.risk_score;
+        }
+        displayConfidence = Math.max(displayConfidence, data.label === 'LEGITIMATE' ? 50 : 10);
 
-            setRiskColor(data.risk_score, riskCard, verdictCard);
-
-            verdictIcon.textContent = isPhishing ? '⚠️' : '🛡️';
-            verdictTitle.textContent = isPhishing ? 'PHİSHİNG TESPİT EDİLDİ' : 'GÜVENLİ';
-            verdictTitle.style.color = isPhishing ? 'var(--danger)' : 'var(--safe)';
-
-            let displayConfidence;
-            if (data.label === 'LEGITIMATE') {
-                displayConfidence = 100 - data.risk_score;
-            } else {
-                displayConfidence = data.risk_score;
-            }
-            displayConfidence = Math.max(displayConfidence, data.label === 'LEGITIMATE' ? 50 : 10);
-
-            if (data.label === 'LEGITIMATE') {
-                verdictConf.textContent = `%${displayConfidence} güvenli`;
-                verdictConf.style.color = 'var(--safe)';
-            } else {
-                verdictConf.textContent = `%${displayConfidence} risk`;
-                verdictConf.style.color = 'var(--danger)';
-            }
+        if (data.label === 'LEGITIMATE') {
+            verdictConf.textContent = `%${displayConfidence} güvenli`;
+            verdictConf.style.color = 'var(--safe)';
+        } else {
+            verdictConf.textContent = `%${displayConfidence} risk`;
+            verdictConf.style.color = 'var(--danger)';
         }
 
         verdictUrl.textContent = data.url;
@@ -884,8 +854,6 @@
           `;
           analysisList.appendChild(row);
         });
-
-        } // ─── end else (normal sonuç gösterimi) ──────────────────────────────
 
       } catch (err) {
         animContainer.style.display = 'none';
