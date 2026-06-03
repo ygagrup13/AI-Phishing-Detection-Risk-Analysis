@@ -1,25 +1,25 @@
 # Model Değerlendirme Raporu
 
 ## Logistic Regression
-- **Validation F1-Score**: 0.7632
-- **CV F1-Score (5-fold)**: 0.7677
+- **Validation F1-Score**: 0.7670
+- **CV F1-Score (5-fold)**: 0.7663
 ## Random Forest
-- **Validation F1-Score**: 0.8762
-- **CV F1-Score (5-fold)**: 0.8707
+- **Validation F1-Score**: 0.8963
+- **CV F1-Score (5-fold)**: 0.8959
 ## XGBoost-like (HistGradientBoosting)
-- **Validation F1-Score**: 0.8737
-- **CV F1-Score (5-fold)**: 0.8703
+- **Validation F1-Score**: 0.8969
+- **CV F1-Score (5-fold)**: 0.8965
 
-## En İyi Model: Random Forest
+## En İyi Model: XGBoost-like (HistGradientBoosting)
 ### Test Seti Sonuçları
-- **Accuracy**: 0.8814
-- **Precision**: 0.9123
-- **Recall**: 0.8440
-- **F1-Score**: 0.8768
-- **False Positive Rate**: 0.0811
+- **Accuracy**: 0.9212
+- **Precision**: 0.9347
+- **Recall**: 0.8601
+- **F1-Score**: 0.8958
+- **False Positive Rate**: 0.0391
 ### Confusion Matrix
 ```
-[[4135  365]
- [ 702 3798]]
+[[62554  2545]
+ [ 5924 36413]]
 ```
-TN: 4135, FP: 365, FN: 702, TP: 3798
+TN: 62554, FP: 2545, FN: 5924, TP: 36413

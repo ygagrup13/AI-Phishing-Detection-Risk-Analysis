@@ -204,8 +204,8 @@ def crawl_with_cloudflare(url: str):
     Kaynak: https://developers.cloudflare.com/browser-rendering/
     USE_CLOUDFLARE = False iken otomatik olarak crawl_site'a düşer.
     """
-    CLOUDFLARE_ACCOUNT_ID = ""
-    CLOUDFLARE_API_TOKEN = ""
+    CLOUDFLARE_ACCOUNT_ID = "CLOUDFLARE_ACCOUNT_ID"
+    CLOUDFLARE_API_TOKEN = "CLOUDFLARE_API_TOKEN"
 
     try:
         print(f"[CLOUDFLARE] API isteği gönderiliyor: {url}")

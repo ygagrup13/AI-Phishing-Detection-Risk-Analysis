@@ -26,7 +26,7 @@ SCALER_PATH = os.path.join(MODELS_DIR, "scaler_v2.pkl")
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-def load_and_clean_datasets(max_samples_per_file=50000):
+def load_and_clean_datasets(max_samples_per_file=None):
     """
     Tüm datasetleri okur, formatlar ve birleştirir.
     """
@@ -34,11 +34,13 @@ def load_and_clean_datasets(max_samples_per_file=50000):
     dfs = []
     
     # Dataset mapping rules: (filename, url_col, label_col, phishing_values, legitimate_values)
+    # NOT: phishing.csv, phishing-urls.csv, legitimate-urls.csv dosyalari URL degil feature vektoru iceriyor
+    # Bu nedenle sadece URL bazli datasetler kullaniliyor
     datasets_info = [
         ("phishing_site_urls.csv", "URL", "Label", ["bad"], ["good"]),
         ("malicious_phish.csv", "url", "type", ["phishing", "malware", "defacement"], ["benign"]),
         ("dataset_phishing.csv", "url", "status", ["phishing"], ["legitimate"]),
-        ("uci-ml-phishing-dataset.csv", "url", "Result", ["-1", -1, "1"], ["0", 1]) # UCI bazen Result kolonu içerir
+        ("uci-ml-phishing-dataset.csv", "url", "Result", ["-1", -1, "1"], ["0", 1]),
     ]
     
     for filename, url_col, label_col, phish_vals, legit_vals in datasets_info:
@@ -48,7 +50,7 @@ def load_and_clean_datasets(max_samples_per_file=50000):
             continue
             
         try:
-            df = pd.read_csv(filepath, nrows=max_samples_per_file, low_memory=False)
+            df = pd.read_csv(filepath, low_memory=False) if max_samples_per_file is None else pd.read_csv(filepath, nrows=max_samples_per_file, low_memory=False)
             
             # Kolon isimlerini case-insensitive kontrol et
             cols_lower = {c.lower(): c for c in df.columns}
@@ -101,23 +103,16 @@ def load_and_clean_datasets(max_samples_per_file=50000):
     
     logger.info(f"Birleştirilen toplam tekil URL sayısı: {len(combined_df)}")
     
-    # Class imbalance çözümü için Undersampling (Örneklem büyüklüğünü dengele)
+    # Undersampling KALDIRILDI - TÜM veri kullanılıyor
+    # Class imbalance class_weight='balanced' ile model içinde çözülüyor (veri kaybı yok)
     phishing = combined_df[combined_df["label"] == 1]
     legitimate = combined_df[combined_df["label"] == 0]
     
-    logger.info(f"Sınıf Dağılımı (Öncesi) - Phishing: {len(phishing)}, Legitimate: {len(legitimate)}")
+    logger.info(f"Sınıf Dağılımı - Phishing: {len(phishing)}, Legitimate: {len(legitimate)}")
+    logger.info(f"TOPLAM EĞİTİM VERİSİ (tüm veri): {len(combined_df)} satır")
     
-    min_len = min(len(phishing), len(legitimate))
-    # Maksimum 30.000 (hızlı eğitim için), ancak verimiz daha azsa tamamını al
-    limit = min(min_len, 30000) 
-    
-    phishing_sampled = phishing.sample(n=limit, random_state=42)
-    legit_sampled = legitimate.sample(n=limit, random_state=42)
-    
-    final_df = pd.concat([phishing_sampled, legit_sampled], ignore_index=True)
-    final_df = final_df.sample(frac=1, random_state=42).reset_index(drop=True)
-    
-    logger.info(f"Sınıf Dağılımı (Sonrası) - Phishing: {len(phishing_sampled)}, Legitimate: {len(legit_sampled)}")
+    # Shuffle
+    final_df = combined_df.sample(frac=1, random_state=42).reset_index(drop=True)
     
     return final_df
 
@@ -228,7 +223,8 @@ def save_model_artifact(model):
     logger.info(f"Final model başarıyla kaydedildi: {MODEL_V2_PATH}")
 
 if __name__ == "__main__":
-    df = load_and_clean_datasets(max_samples_per_file=60000)
+    logger.info("=== TÜM VERİ SETİ İLE EĞİTİM BAŞLIYOR (Limit YOK) ===")
+    df = load_and_clean_datasets()  # max_samples_per_file=None -> tüm veri
     X, y = feature_engineering(df)
     best_model, best_name = train_and_evaluate(X, y)
     save_model_artifact(best_model)
